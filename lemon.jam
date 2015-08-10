@@ -1,0 +1,31 @@
+import type ;
+import generators ;
+
+type.register Y : y ;
+type.register YY : yy ;
+
+generators.register-standard lemon.lemon : Y : C ;
+generators.register-standard lemon.lemon_cpp : YY : CPP ;
+
+actions lemon bind LEMON_BIN
+{
+    src=$(>)
+    dst=$(<)
+    tmp_src="${dst%.c}.y"
+    mkdir -p `dirname "$tmp_src"`
+    cp "$src" "$tmp_src"
+    lemon -p "$tmp_src"
+    mv "$tmp_dst" "$dst"
+}
+
+actions lemon_cpp bind LEMON_BIN
+{
+    src=$(>)
+    dst=$(<)
+    tmp_src="${dst%.cpp}.yy"
+    tmp_dst="${dst%.cpp}.c"
+    mkdir -p `dirname "$tmp_src"`
+    cp "$src" "$tmp_src"
+    lemon -p "$tmp_src"
+    mv "$tmp_dst" "$dst"
+}
